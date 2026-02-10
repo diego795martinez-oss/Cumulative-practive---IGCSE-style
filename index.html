@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IGCSE English Prep Suite | Grade 9</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Merriweather:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --secondary: #0ea5e9;
+            --accent: #f59e0b;
+            --bg-body: #f3f4f6;
+            --bg-card: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --border: #e5e7eb;
+            --success: #10b981;
+            --error: #ef4444;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --radius: 12px;
+            --font-sans: 'Inter', sans-serif;
+            --font-serif: 'Merriweather', serif;
+        }
+
+        [data-theme="dark"] {
+            --primary: #6366f1;
+            --primary-hover: #818cf8;
+            --secondary: #38bdf8;
+            --accent: #fbbf24;
+            --bg-body: #111827;
+            --bg-card: #1f2937;
+            --text-main: #f9fafb;
+            --text-muted: #9ca3af;
+            --border: #374151;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+        }
+
+        * { box-sizing: border-box; transition: background-color 0.3s, color 0.3s, border-color 0.3s; }
+        
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            box-shadow: var(--shadow);
+        }
+
+        h1 { margin: 0; font-size: 1.25rem; font-weight: 700; color: var(--primary); }
+        h2, h3 { color: var(--text-main); }
+        
+        .theme-toggle {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle:hover { background: var(--border); }
+
+        /* Navigation */
+        nav {
+            background: var(--bg-card);
+            padding: 0 1rem;
+            overflow-x: auto;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tab-list {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            gap: 1rem;
+            min-width: max-content;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 1rem 0.5rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-size: 0.95rem;
+        }
+
+        .tab-btn:hover { color: var(--primary); }
+        .tab-btn[aria-selected="true"] {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        
+        /* Locked Tabs */
+        .tab-btn.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+            position: relative;
+        }
+        .tab-btn.locked::after {
+            content: "🔒";
+            font-size: 0.8em;
+            margin-left: 0.3rem;
+        }
+
+        /* Main Content */
+        main {
+            flex: 1;
+            padding: 2rem 1rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .tab-panel { display: none; animation: fadeIn 0.4s ease; }
+        .tab-panel[data-active="true"] { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Components */
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .info-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .badge {
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .skill-list {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .skill-list li {
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .skill-list li::before {
+            content: "✓";
+            color: var(--success);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        /* Audio Player */
+        .audio-player {
+            background: var(--bg-body);
+            padding: 1rem;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .btn:hover { background: var(--primary-hover); }
+        .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
+        .btn-outline:hover { background: var(--primary); color: white; }
+        .btn-danger { background: var(--error); }
+        
+        /* Reading Text */
+        .reading-text {
+            font-family: var(--font-serif);
+            font-size: 1.05rem;
+            background: var(--bg-body);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--accent);
+        }
+
+        .paragraph-label {
+            font-weight: bold;
+            color: var(--primary);
+            margin-right: 0.5rem;
+            font-family: var(--font-sans);
+        }
+
+        /* Quiz Styles */
+        .question-block {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .question-block:last-child { border-bottom: none; }
+
+        .options-grid {
+            display: grid;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .option-label:hover { background-color: var(--bg-body); }
+
+        /* Text Input for Quizzes */
+        .quiz-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            margin-top: 0.5rem;
+            background: var(--bg-body);
+            color: var(--text-main);
+        }
+        .quiz-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+        
+        /* Feedback */
+        .feedback {
+            margin-top: 0.5rem;
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            display: none;
+        }
+        .feedback.correct { background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid var(--success); display: block; }
+        .feedback.incorrect { background: rgba(239, 68, 68, 0.1); color: var(--error); border: 1px solid var(--error); display: block; }
+
+        /* External Links Grid */
+        .link-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        .link-btn {
+            display: block;
+            text-align: center;
+            padding: 0.75rem;
+            background: var(--bg-body);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text-main);
+            font-size: 0.9rem;
+        }
+        .link-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            background-color: var(--border);
+            height: 8px;
+            border-radius: 4px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: var(--success);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            border-top: 1px solid var(--border);
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <span style="font-size: 1.5rem;">🎓</span>
+        <div>
+            <h1>CUMULATIVE PREP</h1>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Grade 9 EFL Cumulative Exam</span>
+        </div>
+    </div>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle Dark Mode">
+        🌙
+    </button>
+</header>
+
+<nav>
+    <ul class="tab-list" role="tablist">
+        <li><button class="tab-btn" role="tab" aria-selected="true" aria-controls="panel-1" id="tab-1">Dashboard</button></li>
+        <li><button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-2" id="tab-2">IGCSE Listening (P2)</button></li>
+        <li><button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-3" id="tab-3">IGCSE Reading (P1)</button></li>
+        <li><button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-4" id="tab-4">Grammar: Past Modals</button></li>
+        <li><button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-5" id="tab-5">Grammar: Wishes</button></li>
+    </ul>
+</nav>
+
+<main>
+    <!-- HOME / DASHBOARD -->
+    <div class="tab-panel" id="panel-1" role="tabpanel" tabindex="0" data-active="true">
+        <div class="card">
+            <h2>Welcome Back!</h2>
+            <p>This website helps you prepare for your cumulative exam. It covers paper skills and key grammar points.</p>
+            
+            <!-- Student Name Input Section -->
+            <div id="name-input-section" style="background: var(--bg-body); padding: 1rem; border-radius: 8px; border: 1px solid var(--primary); margin: 1rem 0;">
+                <label for="student-name" style="font-weight: bold; display: block; margin-bottom: 0.5rem;">Enter your name to unlock the study tabs:</label>
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <input type="text" id="student-name" placeholder="Your Name" style="padding: 0.5rem; border: 1px solid var(--border); border-radius: 6px; flex: 1;">
+                    <button class="btn" onclick="saveName()">Start Studying</button>
+                </div>
+            </div>
+
+            <div class="info-header">
+                <div>
+                    <p><strong>Est. Study Time:</strong> 45–60 mins</p>
+                </div>
+                <button class="btn btn-danger" onclick="resetProgress()">Reset All Progress</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Your Progress</h3>
+            <p id="welcome-message" style="color: var(--primary); font-weight: bold; display: none;"></p>
+            <p id="total-score-display">Total Score: 0 / 0</p>
+            <div class="progress-container">
+                <div class="progress-bar" id="overall-progress"></div>
+            </div>
+            
+            <button class="btn" onclick="downloadReport()" style="margin-bottom: 1rem;">⬇ Download Results (.png)</button>
+
+            <ul class="skill-list" style="grid-template-columns: 1fr;">
+                <li><strong>Listening:</strong> Inference, Attitude, Detail</li>
+                <li><strong>Reading:</strong> Matching, Skimming, Scanning</li>
+                <li><strong>Grammar:</strong> Past Modals (Deduction & Criticism)</li>
+                <li><strong>Grammar:</strong> Wishes & Regrets (Past Perfect vs Past Simple)</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- TAB 2: LISTENING -->
+    <div class="tab-panel" id="panel-2" role="tabpanel" tabindex="0">
+        <div class="card">
+            <h3>🎧 Paper 2: Listening Skills</h3>
+            <p>Focus on <strong>Gist, Inference, and Attitude</strong>. Don't just listen for matching words; listen for matching meanings.</p>
+            <ul class="skill-list">
+                <li>Identify the speaker's purpose.</li>
+                <li>Recognise synonyms and paraphrases.</li>
+                <li>Distinguish between literal meaning and implied attitude.</li>
+            </ul>
+        </div>
+
+        <!-- Listening Task 1 -->
+        <div class="card">
+            <div class="info-header">
+                <h4>Task 1: Voices at School (Part 1)</h4>
+                <span class="badge">Interview</span>
+            </div>
+            <p><em>Listen to the first part of the interview with Amira about the 'Voices at School' project.</em></p>
+            
+            <div class="audio-player" style="display: block; padding: 0.5rem;">
+                <audio controls style="width: 100%;">
+                    <source src="igcse_interview.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+
+            <form id="quiz-listening-1">
+                <!-- Questions injected via JS -->
+            </form>
+            <button class="btn" style="margin-top:1rem;" onclick="checkQuiz('listening-1')">Check Answers</button>
+        </div>
+
+        <!-- Listening Task 2 -->
+        <div class="card">
+            <div class="info-header">
+                <h4>Task 2: Voices at School (Part 2)</h4>
+                <span class="badge">Conversation</span>
+            </div>
+            <p><em>Listen to the conclusion of the interview regarding the project's impact.</em></p>
+            
+            <div class="audio-player" style="display: block; padding: 0.5rem;">
+                <audio controls style="width: 100%;">
+                    <source src="igcse_interview.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+
+            <form id="quiz-listening-2">
+                <!-- Questions injected via JS -->
+            </form>
+            <button class="btn" style="margin-top:1rem;" onclick="checkQuiz('listening-2')">Check Answers</button>
+        </div>
+
+        <div class="card">
+            <h3>🌐 Official Materials</h3>
+            <p>External links (Open in new tab)</p>
+            <div class="link-grid">
+                 <a class="link-btn" href="https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-igcse-english-second-language-oral-endorsement-0510/past-papers/" target="_blank">Cambridge Past Papers</a>
+                 <a class="link-btn" href="https://www.cambridgeinternational.org/Images/638100-2024-specimen-paper-2.pdf" target="_blank">2024 Specimen Paper</a>
+                 <a class="link-btn" href="https://www.cambridgeinternational.org/Images/638103-2024-specimen-paper-2-audio-file.mp3" target="_blank">2024 Specimen Audio</a>
+                 <a class="link-btn" href="https://learnenglish.britishcouncil.org/skills/listening/b1-listening" target="_blank">British Council B1</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 3: READING -->
+    <div class="tab-panel" id="panel-3" role="tabpanel" tabindex="0">
+        <div class="card">
+            <h3>📖 Paper 1: Reading Skills</h3>
+            <ul class="skill-list">
+                <li><strong>Skimming:</strong> Read quickly for general idea.</li>
+                <li><strong>Scanning:</strong> Look for specific details.</li>
+                <li><strong>Paraphrase:</strong> The text will never use the exact same words as the question.</li>
+            </ul>
+        </div>
+
+        <!-- Activity 1: Matching -->
+        <div class="card">
+            <h4>Activity 1: Matching Information</h4>
+            <p>Read the paragraphs about mental health and inclusion. Match the statements to the correct paragraph (A-F).</p>
+            
+            <div class="reading-text">
+                <p><span class="paragraph-label">[A]</span> Understanding mental health in schools is shifting from a niche concern to a central pillar of student wellbeing. Recent studies suggest that academic pressure, combined with social media scrutiny, has created a "perfect storm" for anxiety. Educators are now prioritising resilience training alongside algebra and literature.</p>
+                <p><span class="paragraph-label">[B]</span> Inclusion isn't just about allowing everyone in the room; it's about changing the room. True inclusivity means adapting teaching styles for neurodivergent thinkers and ensuring that introverted students aren't penalised for their quiet nature. It is a structural shift, not a superficial one.</p>
+                <p><span class="paragraph-label">[C]</span> However, discrimination often wears a subtle mask. Microaggressions—small, often unintentional comments—can accumulate to make minority students feel alienated. Schools are implementing "bystander intervention" workshops to empower students to speak up when they witness these subtle exclusions.</p>
+                <p><span class="paragraph-label">[D]</span> The digital world offers a paradox. While it connects isolated teens with like-minded communities, it also fuels the "comparison trap." Many students report feeling inadequate after viewing curated highlights of their peers' lives, leading to a decline in self-esteem.</p>
+                <p><span class="paragraph-label">[E]</span> Peer support systems have proven surprisingly effective. Older students mentoring younger ones creates a bond that teachers sometimes cannot replicate. These "buddy systems" reduce bullying incidents significantly, as younger students feel they have an ally in the playground.</p>
+                <p><span class="paragraph-label">[F]</span> Ultimately, a school's culture is defined by what it tolerates. Zero-tolerance policies on bullying are standard, but restorative justice—where offenders must repair the harm caused—is gaining traction. It forces students to understand the impact of their actions rather than just serving detention.</p>
+            </div>
+
+            <form id="quiz-reading-1">
+                <!-- Matching questions injected via JS -->
+            </form>
+            <button class="btn" style="margin-top:1rem;" onclick="checkQuiz('reading-1')">Check Matches</button>
+        </div>
+
+        <!-- Activity 2: MCQ -->
+        <div class="card">
+            <h4>Activity 2: Reading for Detail (MCQ)</h4>
+            <div class="reading-text">
+                <p><strong>Reflections on Senior Year</strong></p>
+                <p>Looking back at my time in high school, I realise how much energy I wasted trying to fit a mould that wasn't made for me. I wish I had known then that popularity is a currency that loses its value the moment you graduate. I spent hours curating my online persona, terrified that one wrong post would ostracise me. If only I had spent that time honing my guitar skills or reading the books I actually enjoyed, I would be a much more interesting person today.</p>
+                <p>I also regret not standing up for Julian. He was the quiet kid in the back who drew amazing comics. The others teased him for his worn-out shoes. I didn't join in, but I didn't stop it either. I should have said something. Silence is a form of complicity, and that guilt lingers. Now, I see Julian is a successful graphic novelist. He must have worked incredibly hard to overcome those years. I would apologise to him if I could find his contact details, but perhaps he has moved on.</p>
+            </div>
+            <form id="quiz-reading-2">
+                <!-- Questions injected via JS -->
+            </form>
+            <button class="btn" style="margin-top:1rem;" onclick="checkQuiz('reading-2')">Check Answers</button>
+        </div>
+    </div>
+
+    <!-- TAB 4: GRAMMAR MODALS -->
+    <div class="tab-panel" id="panel-4" role="tabpanel" tabindex="0">
+        <div class="card">
+            <h3>Past Modals: Deduction & Criticism</h3>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem;">
+                <div style="background: var(--bg-body); padding:1rem; border-radius:8px;">
+                    <h4 style="color:var(--primary)">Deduction (Guessing)</h4>
+                    <p><strong>Must have + V3:</strong> 90-100% sure it happened.<br><em>"He isn't here. He must have gone home."</em></p>
+                    <p><strong>Can't have + V3:</strong> 90-100% sure it didn't happen.<br><em>"She can't have failed! She studied hard."</em></p>
+                    <p><strong>Might/Could have + V3:</strong> It was possible (50%).<br><em>"I might have left my keys in the car."</em></p>
+                </div>
+                <div style="background: var(--bg-body); padding:1rem; border-radius:8px;">
+                    <h4 style="color:var(--accent)">Regret & Criticism</h4>
+                    <p><strong>Should have + V3:</strong> It was a good idea, but you didn't do it.<br><em>"You should have called me."</em></p>
+                    <p><strong>Shouldn't have + V3:</strong> It was a bad idea, but you did it.<br><em>"I shouldn't have eaten that cake."</em></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h4>Practice Quiz: Past Modals</h4>
+            <form id="quiz-modals">
+                <!-- Injected via JS -->
+            </form>
+            <button class="btn" style="margin-top:1rem;" onclick="checkQuiz('modals')">Check Grammar</button>
+        </div>
+    </div>
+
+    <!-- TAB 5: WISHES -->
+    <div class="tab-panel" id="panel-5" role="tabpanel" tabindex="0">
+        <div class="card">
+            <h3>Wishes & Regrets</h3>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem;">
+                <div style="background: var(--bg-body); padding:1rem; border-radius:8px;">
+                    <h4 style="color:var(--primary)">Present Wishes</h4>
+                    <p>Use <strong>Past Simple</strong> to change the present.</p>
+                    <p><em>"I am poor."</em> &rarr; <em>"I wish I <strong>were</strong> rich."</em></p>
+                    <p><em>"It is raining."</em> &rarr; <em>"If only it <strong>didn't</strong> rain."</em></p>
+                </div>
+                <div style="background: var(--bg-body); padding:1rem; border-radius:8px;">
+                    <h4 style="color:var(--accent)">Past Regrets</h4>
+                    <p>Use <strong>Past Perfect (had + V3)</strong> to change the past.</p>
+                    <p><em>"I failed the test."</em> &rarr; <em>"I wish I <strong>had studied</strong>."</em></p>
+                    <p><em>"I was late."</em> &rarr; <em>"If only I <strong>hadn't been</strong> late."</em></p>
+                </div>
+            </div>
+            <p style="margin-top:1rem; font-size:0.9rem;"><strong>Note:</strong> Use <em>"I wish he would..."</em> only for annoyance or wanting someone else to change their behaviour.</p>
+        </div>
+
+        <div class="card">
+            <h4>Practice Quiz: Wishes</h4>
+            <form id="quiz-wishes">
+                <!-- Injected via JS -->
+            </form>
+            <button class="btn" style="margin-top:1rem;" onclick="checkQuiz('wishes')">Check Wishes</button>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2024 Grade 9 EFL Review. Created for educational purposes.</p>
+</footer>
+
+<!-- Hidden Canvas for Image Generation -->
+<canvas id="reportCanvas" width="800" height="600" style="display: none;"></canvas>
+
+<script>
+    /** STATE MANAGEMENT **/
+    const appState = {
+        theme: localStorage.getItem('theme') || 'light',
+        scores: JSON.parse(localStorage.getItem('quizScores')) || {},
+        studentName: localStorage.getItem('studentName') || '',
+        activeTab: localStorage.getItem('activeTab') || 'panel-1',
+        drafts: JSON.parse(localStorage.getItem('quizDrafts')) || {}
+    };
+
+    /** DATA: QUESTIONS & SCRIPTS **/
+    
+    // Audio Scripts (Text-to-Speech) - Kept only if needed for fallback, though Listening now uses MP3s.
+    const scripts = {
+        audio1: `[Use MP3 file]`,
+        audio2: `[Use MP3 file]`
+    };
+
+    const quizzes = {
+        'listening-1': [
+            { q: "What is the main reason Amira gives for starting Voices at School?", options: ["A serious incident that forced students to act", "A pattern of small experiences that gradually became concerning", "Pressure from teachers to address behaviour", "A desire to improve the school’s public image"], a: 1, exp: "Amira likely describes an accumulation of small issues rather than one big event." },
+            { q: "Amira’s tone when describing the early signs of the problem can best be described as:", options: ["Defensive but confident", "Reflective and slightly regretful", "Angry and confrontational", "Detached and factual"], a: 1, exp: "Tone questions often look for nuance; 'regretful' fits with looking back on missed signs." },
+            { q: "What does Amira imply about students’ silence in the past?", options: ["It was encouraged by teachers", "It was caused by a lack of information", "It helped problems continue unnoticed", "It showed agreement with behaviour"], a: 2, exp: "Silence usually implies complicity or allowing issues to persist." },
+            { q: "Why were posters and assemblies considered insufficient?", options: ["They required too much time", "Students ignored them completely", "They did not allow meaningful interaction", "Teachers opposed them"], a: 2, exp: "Passive methods (posters) often lack the 'interaction' needed for real change." },
+            { q: "What misunderstanding slowed the project at first?", options: ["Students believed it would be compulsory", "Teachers felt excluded from planning", "Some thought it would be judgemental or preachy", "The purpose of the project was unclear to staff"], a: 2, exp: "Initiatives are often feared to be 'preachy' before they are understood." },
+            { q: "When Amira says she “regrets not explaining our intentions more clearly”, she is expressing:", options: ["Frustration with others’ reactions", "Disappointment in teacher support", "A wish to have communicated differently", "Doubt about the project’s value"], a: 2, exp: "Regret about an action usually means wishing to have done it differently." }
+        ],
+        'listening-2': [
+            { q: "What led to increased trust in the initiative?", options: ["Strict rules set by teachers", "Students seeing their ideas put into practice", "External experts joining discussions", "Improved publicity"], a: 1, exp: "Seeing concrete results (practice) is the most common builder of trust." },
+            { q: "What is suggested by teachers admitting they “don’t always notice everything”?", options: ["They lacked training", "They were apologising formally", "They accepted shared responsibility", "They wanted students to lead completely"], a: 2, exp: "Admitting limitations is a way of accepting that responsibility must be shared." },
+            { q: "The phrase “responsibility was shared” mainly highlights:", options: ["Equal blame", "Cooperation between groups", "Reduced expectations", "Unclear leadership"], a: 1, exp: "Sharing responsibility in a positive context implies cooperation." },
+            { q: "Which statement best summarises Amira’s final message?", options: ["Schools change only when teachers lead", "Speaking up early can prevent long-term problems", "Silence is sometimes necessary", "Students should avoid conflict"], a: 1, exp: "Prevention through speaking up is a standard theme in these topics." },
+            { q: "Amira’s overall attitude towards the initiative is:", options: ["Cautiously optimistic", "Openly critical", "Emotionally detached", "Uncertain and doubtful"], a: 0, exp: "While acknowledging difficulties, the outcome seems positive (optimism)." },
+            { q: "The interviewer’s main role is to:", options: ["Challenge Amira’s opinions", "Promote the school", "Guide reflection through questions", "Summarise official policy"], a: 2, exp: "Interviewers in exams typically guide the speaker to reflect or elaborate." }
+        ],
+        'reading-1': [
+            { q: "Which paragraph discusses the negative impact of comparing oneself to others online?", options: ["A", "B", "C", "D", "E", "F"], a: 3, exp: "Paragraph D mentions the 'comparison trap' and curated highlights." },
+            { q: "Which paragraph suggests that simply punishing bad behaviour is not enough?", options: ["A", "B", "C", "D", "E", "F"], a: 5, exp: "Paragraph F discusses 'Restorative justice' vs just serving detention." },
+            { q: "Which paragraph mentions adapting the environment for different types of brains?", options: ["A", "B", "C", "D", "E", "F"], a: 1, exp: "Paragraph B discusses neurodivergent thinkers and introverts." },
+            { q: "Which paragraph highlights the benefits of students helping students?", options: ["A", "B", "C", "D", "E", "F"], a: 4, exp: "Paragraph E discusses 'peer support systems' and 'buddy systems'." },
+            { q: "Which paragraph connects academic stress with modern technology?", options: ["A", "B", "C", "D", "E", "F"], a: 0, exp: "Paragraph A mentions 'academic pressure combined with social media scrutiny'." },
+            { q: "Which paragraph addresses small, indirect acts of discrimination?", options: ["A", "B", "C", "D", "E", "F"], a: 2, exp: "Paragraph C defines 'microaggressions' as subtle exclusions." },
+            { q: "Which paragraph implies that schools are taking mental health as seriously as subjects like math?", options: ["A", "B", "C", "D", "E", "F"], a: 0, exp: "Paragraph A mentions 'alongside algebra and literature'." },
+            { q: "Which paragraph suggests training students to act when they see something wrong?", options: ["A", "B", "C", "D", "E", "F"], a: 2, exp: "Paragraph C mentions 'bystander intervention'." }
+        ],
+        'reading-2': [
+            { q: "What does the narrator regret about high school?", options: ["Not studying enough.", "Trying to be popular.", "Playing the guitar.", "Reading too many books."], a: 1, exp: "He says he wasted energy 'trying to fit a mould' and curating his persona." },
+            { q: "What does 'popularity is a currency that loses its value' mean?", options: ["Popularity costs money.", "Popularity is useless after school.", "Popularity makes you rich.", "Popularity is hard to earn."], a: 1, exp: "It implies it serves no purpose once you graduate." },
+            { q: "Why does the narrator feel guilty about Julian?", options: ["He bullied Julian.", "He stole Julian's comics.", "He stayed silent when others teased Julian.", "He didn't like Julian's shoes."], a: 2, exp: "He says: 'I didn't join in, but I didn't stop it either.'" },
+            { q: "What can we infer about Julian today?", options: ["He is still struggling.", "He is a graphic novelist.", "He is a teacher.", "He is an accountant."], a: 1, exp: "The text states: 'Now, I see Julian is a successful graphic novelist.'" },
+            { q: "What structure is used in: 'If only I had spent that time honing my guitar skills'?", options: ["Past regret.", "Present wish.", "Future possibility.", "Zero conditional."], a: 0, exp: "If only + Past Perfect refers to a past regret." }
+        ],
+        'modals': [
+            { q: "The lights are off. They ______ gone to sleep. (Certainty)", options: ["might have", "must have", "should have", "can't have"], a: 1, exp: "Must have = Logical deduction (90% sure)." },
+            { q: "She ______ seen the message; she didn't have her phone. (Impossibility)", options: ["must have", "should have", "can't have", "might have"], a: 2, exp: "Can't have = Logical impossibility." },
+            { q: "I failed the exam. I ______ studied more. (Criticism)", options: ["must have", "should have", "might have", "would have"], a: 1, exp: "Should have = Criticism of a past mistake." },
+            { q: "Where is my bag? I ______ left it on the bus. (Possibility)", options: ["should have", "can't have", "must have", "might have"], a: 3, exp: "Might have = It is possible." },
+            { q: "You ______ spoken to her like that! It was rude. (Criticism)", options: ["shouldn't have", "couldn't have", "mustn't have", "wouldn't have"], a: 0, exp: "Shouldn't have = Negative criticism." },
+            // New Open-Ended Questions
+            { q: "The street is wet. It ______ (rain) last night. (Deduction)", type: "text", a: ["must have rained"], exp: "Use 'must have' for logical certainty about the past." },
+            { q: "I regret telling him. I ______ (tell) him. (Regret)", type: "text", a: ["shouldn't have told", "should not have told"], exp: "Use 'shouldn't have' to express regret about a past action." },
+            { q: "She is late. She ______ (miss) the bus. (Possibility)", type: "text", a: ["might have missed", "may have missed", "could have missed"], exp: "Use might/may/could have for possibility." },
+            { q: "He speaks perfect French. He ______ (live) in France. (Deduction)", type: "text", a: ["must have lived"], exp: "Use 'must have' because the evidence (perfect French) makes it very likely." },
+            { q: "You drove too fast! You ______ (have) an accident. (Past Possibility/Risk)", type: "text", a: ["could have had", "might have had"], exp: "Use 'could have' to talk about a danger that was possible but didn't happen." }
+        ],
+        'wishes': [
+            { q: "I didn't eat breakfast. I'm hungry. -> I wish I ______ breakfast.", options: ["ate", "had eaten", "eat", "have eaten"], a: 1, exp: "Regret about past = Past Perfect (had eaten)." },
+            { q: "I am short. -> I wish I ______ taller.", options: ["am", "was", "were", "had been"], a: 2, exp: "Wish about present = Past Simple (were is preferred over was in formal grammar)." },
+            { q: "He is so loud! It's annoying. -> I wish he ______ be quiet.", options: ["would", "could", "had", "did"], a: 0, exp: "Wish + Would = Annoyance at someone else's behaviour." },
+            { q: "I have too much homework (now). -> If only I ______ less homework.", options: ["had", "have", "had had", "would have"], a: 0, exp: "Wish about present state = Past Simple (had)." },
+            { q: "I bought a bad car. -> I wish I ______ that car.", options: ["didn't buy", "hadn't bought", "wouldn't buy", "haven't bought"], a: 1, exp: "Regret about past action = Past Perfect (hadn't bought)." },
+            // New Open-Ended Questions
+            { q: "I don't know the answer. -> I wish I ______ the answer.", type: "text", a: ["knew"], exp: "Wish about present (know) -> Past Simple (knew)." },
+            { q: "I lost my phone. -> If only I ______ my phone.", type: "text", a: ["hadn't lost", "had not lost"], exp: "Regret about past (lost) -> Past Perfect (hadn't lost)." },
+            { q: "Stop tapping your pen! -> I wish you ______ stop tapping.", type: "text", a: ["would"], exp: "Use 'would' for annoyance/complaints." },
+            { q: "I have to work today. -> I wish I ______ to work today.", type: "text", a: ["didn't have", "did not have"], exp: "Wish about present obligation -> Past Simple." },
+            { q: "I ate too much. -> I wish I ______ so much.", type: "text", a: ["hadn't eaten", "had not eaten"], exp: "Regret about past action -> Past Perfect." }
+        ]
+    };
+
+    /** INITIALIZATION **/
+    document.addEventListener('DOMContentLoaded', () => {
+        applyTheme(appState.theme);
+        setupTabs();
+        setupQuizzes(); // Now handles draft restoration
+        updateProgressUI();
+        checkNameLock();
+        restoreActiveTab(); // Navigate to last location
+    });
+
+    /** AUTH & LOCK LOGIC **/
+    function checkNameLock() {
+        const tabs = document.querySelectorAll('.tab-btn:not(#tab-1)');
+        const nameInput = document.getElementById('student-name');
+        const inputSection = document.getElementById('name-input-section');
+        const welcomeMsg = document.getElementById('welcome-message');
+
+        if (!appState.studentName) {
+            // Lock tabs
+            tabs.forEach(t => {
+                t.classList.add('locked');
+                t.setAttribute('disabled', 'true');
+            });
+            inputSection.style.display = 'block';
+            welcomeMsg.style.display = 'none';
+        } else {
+            // Unlock tabs
+            tabs.forEach(t => {
+                t.classList.remove('locked');
+                t.removeAttribute('disabled');
+            });
+            inputSection.style.display = 'none';
+            welcomeMsg.textContent = `Student: ${appState.studentName}`;
+            welcomeMsg.style.display = 'block';
+            nameInput.value = appState.studentName;
+        }
+    }
+
+    function saveName() {
+        const nameInput = document.getElementById('student-name');
+        const name = nameInput.value.trim();
+        
+        if (name) {
+            appState.studentName = name;
+            localStorage.setItem('studentName', name);
+            checkNameLock();
+            alert(`Welcome, ${name}! The study tabs are now unlocked.`);
+            // Try to go to saved tab if it exists
+            restoreActiveTab();
+        } else {
+            alert("Please enter a name to continue.");
+        }
+    }
+    
+    function restoreActiveTab() {
+        // Only restore if we have a name and a saved tab different from dashboard
+        if (appState.studentName && appState.activeTab && appState.activeTab !== 'panel-1') {
+            const tabBtn = document.querySelector(`button[aria-controls="${appState.activeTab}"]`);
+            if (tabBtn) {
+                // We manually trigger click to reuse the UI logic, 
+                // but we bypass the alert since we know we are authorized
+                if (!tabBtn.classList.contains('locked')) {
+                    tabBtn.click();
+                }
+            }
+        }
+    }
+
+    /** IMAGE GENERATION (CANVAS) **/
+    function downloadReport() {
+        if (!appState.studentName) {
+            alert("Please enter your name first.");
+            return;
+        }
+
+        const canvas = document.getElementById('reportCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Clear canvas
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Header Background
+        ctx.fillStyle = '#4f46e5';
+        ctx.fillRect(0, 0, canvas.width, 100);
+
+        // Header Text
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 30px Arial';
+        ctx.fillText('IGCSE Prep Report Card', 40, 60);
+
+        // Student Info
+        ctx.fillStyle = '#1f2937';
+        ctx.font = 'bold 20px Arial';
+        ctx.fillText(`Student: ${appState.studentName}`, 40, 150);
+        
+        const date = new Date().toLocaleDateString();
+        ctx.font = '16px Arial';
+        ctx.fillStyle = '#6b7280';
+        ctx.fillText(`Date: ${date}`, 40, 180);
+
+        // Line
+        ctx.beginPath();
+        ctx.moveTo(40, 200);
+        ctx.lineTo(760, 200);
+        ctx.strokeStyle = '#e5e7eb';
+        ctx.stroke();
+
+        // Scores
+        let yPos = 250;
+        let totalScore = 0;
+        let totalPossible = 0;
+
+        ctx.font = '18px Arial';
+        ctx.fillStyle = '#1f2937';
+
+        // Loop through known quizzes for order
+        const quizLabels = {
+            'listening-1': 'Listening Task 1',
+            'listening-2': 'Listening Task 2',
+            'reading-1': 'Reading: Matching',
+            'reading-2': 'Reading: MCQ',
+            'modals': 'Grammar: Modals',
+            'wishes': 'Grammar: Wishes'
+        };
+
+        for (const [key, label] of Object.entries(quizLabels)) {
+            const data = appState.scores[key] || { score: 0, total: quizzes[key].length };
+            const scoreText = `${data.score} / ${data.total}`;
+            const percent = data.total === 0 ? 0 : Math.round((data.score / data.total) * 100);
+            
+            totalScore += data.score;
+            totalPossible += data.total;
+
+            ctx.fillText(label, 40, yPos);
+            ctx.fillText(scoreText + ` (${percent}%)`, 600, yPos);
+            yPos += 40;
+        }
+
+        // Total
+        yPos += 20;
+        ctx.beginPath();
+        ctx.moveTo(40, yPos);
+        ctx.lineTo(760, yPos);
+        ctx.stroke();
+
+        yPos += 50;
+        ctx.font = 'bold 24px Arial';
+        ctx.fillStyle = '#4f46e5';
+        const totalPercent = totalPossible === 0 ? 0 : Math.round((totalScore / totalPossible) * 100);
+        ctx.fillText(`Final Grade: ${totalPercent}%`, 40, yPos);
+        ctx.fillText(`${totalScore} / ${totalPossible}`, 600, yPos);
+
+        // Footer
+        ctx.font = 'italic 14px Arial';
+        ctx.fillStyle = '#9ca3af';
+        ctx.fillText('Keep practising!', 40, 550);
+
+        // Download
+        const link = document.createElement('a');
+        link.download = `${appState.studentName.replace(/ /g, '_')}_Progress_Report.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    }
+
+    /** THEME LOGIC **/
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.addEventListener('click', () => {
+        appState.theme = appState.theme === 'light' ? 'dark' : 'light';
+        localStorage.setItem('theme', appState.theme);
+        applyTheme(appState.theme);
+    });
+
+    function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+    }
+
+    /** TAB LOGIC **/
+    function setupTabs() {
+        const tabs = document.querySelectorAll('[role="tab"]');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', changeTab);
+        });
+    }
+
+    function changeTab(e) {
+        // Stop audio if playing
+        stopAudio();
+
+        const target = e.target;
+        
+        // Check lock
+        if (target.classList.contains('locked')) {
+            alert("Please enter your name in the Dashboard to unlock this tab.");
+            return;
+        }
+
+        const panelId = target.getAttribute('aria-controls');
+        
+        // Save Active Tab
+        appState.activeTab = panelId;
+        localStorage.setItem('activeTab', panelId);
+
+        document.querySelectorAll('[role="tab"]').forEach(t => t.setAttribute('aria-selected', false));
+        target.setAttribute('aria-selected', true);
+
+        document.querySelectorAll('[role="tabpanel"]').forEach(p => {
+            p.setAttribute('data-active', false);
+            p.style.display = 'none';
+        });
+        
+        const panel = document.getElementById(panelId);
+        panel.style.display = 'block';
+        setTimeout(() => panel.setAttribute('data-active', true), 10);
+    }
+
+    /** QUIZ ENGINE **/
+    function setupQuizzes() {
+        for (const [id, questions] of Object.entries(quizzes)) {
+            const container = document.getElementById(`quiz-${id}`);
+            if (!container) continue;
+            container.innerHTML = ''; // Clear existing to prevent duplicates
+
+            questions.forEach((q, index) => {
+                const block = document.createElement('div');
+                block.className = 'question-block';
+                
+                let inputHtml = '';
+                
+                if (q.type === 'text') {
+                    // Open-ended input
+                    inputHtml = `<input type="text" class="quiz-input" name="${id}-q${index}" placeholder="Type your answer here..." autocomplete="off">`;
+                } else {
+                    // Multiple Choice
+                    inputHtml = '<div class="options-grid">';
+                    q.options.forEach((opt, optIndex) => {
+                        inputHtml += `
+                            <label class="option-label">
+                                <input type="radio" name="${id}-q${index}" value="${optIndex}">
+                                <span>${opt}</span>
+                            </label>
+                        `;
+                    });
+                    inputHtml += '</div>';
+                }
+
+                block.innerHTML = `
+                    <p><strong>${index + 1}.</strong> ${q.q}</p>
+                    ${inputHtml}
+                    <div class="feedback" id="fb-${id}-${index}"></div>
+                `;
+                container.appendChild(block);
+
+                // Add Autosave Listeners & Restore Drafts
+                const inputs = block.querySelectorAll('input');
+                inputs.forEach(input => {
+                    // 1. RESTORE STATE
+                    if (appState.drafts[id] && appState.drafts[id][index] !== undefined) {
+                        const savedVal = appState.drafts[id][index];
+                        if (input.type === 'text') {
+                            input.value = savedVal;
+                        } else if (input.type === 'radio') {
+                            if (input.value == savedVal) input.checked = true;
+                        }
+                    }
+
+                    // 2. AUTOSAVE LISTENER
+                    const eventType = input.type === 'text' ? 'input' : 'change';
+                    input.addEventListener(eventType, (e) => {
+                        if (!appState.drafts[id]) appState.drafts[id] = {};
+                        appState.drafts[id][index] = e.target.value;
+                        localStorage.setItem('quizDrafts', JSON.stringify(appState.drafts));
+                    });
+                });
+            });
+        }
+    }
+
+    function checkQuiz(quizId) {
+        const questions = quizzes[quizId];
+        let score = 0;
+        let answered = 0;
+
+        questions.forEach((q, index) => {
+            const feedbackBox = document.getElementById(`fb-${quizId}-${index}`);
+            feedbackBox.className = 'feedback'; // Reset
+            let isCorrect = false;
+            let userVal = null;
+
+            if (q.type === 'text') {
+                const input = document.querySelector(`input[name="${quizId}-q${index}"]`);
+                userVal = input ? input.value.trim() : '';
+                
+                if (userVal !== '') {
+                    answered++;
+                    // Check against array of acceptable answers (case-insensitive)
+                    const correctAnswers = q.a.map(ans => ans.toLowerCase());
+                    if (correctAnswers.includes(userVal.toLowerCase())) {
+                        isCorrect = true;
+                    }
+                }
+            } else {
+                const selected = document.querySelector(`input[name="${quizId}-q${index}"]:checked`);
+                if (selected) {
+                    answered++;
+                    userVal = parseInt(selected.value);
+                    if (userVal === q.a) isCorrect = true;
+                }
+            }
+            
+            // Render Feedback
+            if (userVal !== '' && userVal !== null && userVal !== undefined) {
+                if (isCorrect) {
+                    score++;
+                    feedbackBox.innerHTML = `<strong>Correct!</strong> ${q.exp}`;
+                    feedbackBox.classList.add('correct');
+                } else {
+                    let correctText = q.type === 'text' ? `Correct answer: ${q.a[0]}` : '';
+                    feedbackBox.innerHTML = `<strong>Incorrect.</strong> ${correctText} <br> ${q.exp}`;
+                    feedbackBox.classList.add('incorrect');
+                }
+            } else {
+                feedbackBox.textContent = "Please answer this question.";
+                feedbackBox.classList.add('incorrect');
+            }
+        });
+
+        if (answered === questions.length) {
+            appState.scores[quizId] = { score: score, total: questions.length };
+            localStorage.setItem('quizScores', JSON.stringify(appState.scores));
+            updateProgressUI();
+        }
+    }
+
+    function updateProgressUI() {
+        let earned = 0;
+        let possible = 0;
+        
+        // Calculate totals based on all available quizzes
+        for (const key in quizzes) {
+            possible += quizzes[key].length;
+            if (appState.scores[key]) {
+                earned += appState.scores[key].score;
+            }
+        }
+
+        const percentage = possible === 0 ? 0 : Math.round((earned / possible) * 100);
+        document.getElementById('total-score-display').textContent = `Total Score: ${earned} / ${possible}`;
+        document.getElementById('overall-progress').style.width = `${percentage}%`;
+    }
+
+    function resetProgress() {
+        if(confirm("Are you sure you want to delete your progress?")) {
+            localStorage.removeItem('quizScores');
+            localStorage.removeItem('studentName'); // Clear name
+            localStorage.removeItem('activeTab');   // Clear location
+            localStorage.removeItem('quizDrafts');  // Clear drafts
+            
+            appState.scores = {};
+            appState.studentName = '';
+            appState.activeTab = 'panel-1';
+            appState.drafts = {};
+            
+            location.reload();
+        }
+    }
+
+    /** AUDIO ENGINE (Web Speech API) **/
+    let synth = window.speechSynthesis;
+    let utterance = null;
+    let isPaused = false;
+
+    // Load voices on init (fix for Chrome)
+    let voices = [];
+    window.speechSynthesis.onvoiceschanged = () => {
+        voices = window.speechSynthesis.getVoices();
+    };
+
+    function playAudio(scriptId) {
+        // Cancel existing
+        synth.cancel();
+        
+        if (isPaused && utterance && utterance.text === scripts[scriptId]) {
+            synth.resume();
+            isPaused = false;
+        } else {
+            const text = scripts[scriptId];
+            utterance = new SpeechSynthesisUtterance(text);
+            
+            // Try to find a British voice for IGCSE feel, else default
+            const voice = voices.find(v => v.lang.includes('GB')) || voices.find(v => v.lang.includes('en'));
+            if (voice) utterance.voice = voice;
+            
+            utterance.rate = 0.9; // Slightly slower for ESL
+            
+            utterance.onend = () => {
+                document.getElementById(`${scriptId}-status`).textContent = "Finished";
+                utterance = null;
+                isPaused = false;
+            };
+
+            synth.speak(utterance);
+        }
+        document.getElementById(`${scriptId}-status`).textContent = "Playing...";
+    }
+
+    function pauseAudio() {
+        if (synth.speaking && !synth.paused) {
+            synth.pause();
+            isPaused = true;
+            updateStatus("Paused");
+        }
+    }
+
+    function stopAudio() {
+        synth.cancel();
+        isPaused = false;
+        utterance = null;
+        updateStatus("Stopped");
+    }
+
+    function updateStatus(msg) {
+        const statuses = document.querySelectorAll('[id$="-status"]');
+        statuses.forEach(s => s.textContent = msg);
+    }
+
+    // Stop audio if user leaves tab/window
+    window.onbeforeunload = () => {
+        synth.cancel();
+    };
+</script>
+
+</body>
+</html>
