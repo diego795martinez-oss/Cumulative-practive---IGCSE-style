@@ -51,6 +51,20 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            
+            /* Disable Text Selection */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        /* Allow selection in inputs so students can edit their answers */
+        input, textarea {
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
         }
 
         /* Header */
@@ -612,6 +626,18 @@
 <canvas id="reportCanvas" width="800" height="600" style="display: none;"></canvas>
 
 <script>
+    /** COPY PROTECTION **/
+    document.addEventListener('contextmenu', event => event.preventDefault());
+    document.addEventListener('copy', event => {
+        event.preventDefault();
+        alert("Copying is disabled for this exam practice.");
+    });
+    document.addEventListener('cut', event => event.preventDefault());
+    document.addEventListener('paste', event => {
+        event.preventDefault();
+        alert("Pasting is disabled. Please type your answers.");
+    });
+
     /** STATE MANAGEMENT **/
     const appState = {
         theme: localStorage.getItem('theme') || 'light',
@@ -695,10 +721,10 @@
     document.addEventListener('DOMContentLoaded', () => {
         applyTheme(appState.theme);
         setupTabs();
-        setupQuizzes(); // Now handles draft restoration
+        setupQuizzes();
         updateProgressUI();
         checkNameLock();
-        restoreActiveTab(); // Navigate to last location
+        restoreActiveTab();
     });
 
     /** AUTH & LOCK LOGIC **/
@@ -738,7 +764,6 @@
             localStorage.setItem('studentName', name);
             checkNameLock();
             alert(`Welcome, ${name}! The study tabs are now unlocked.`);
-            // Try to go to saved tab if it exists
             restoreActiveTab();
         } else {
             alert("Please enter a name to continue.");
@@ -746,15 +771,10 @@
     }
     
     function restoreActiveTab() {
-        // Only restore if we have a name and a saved tab different from dashboard
         if (appState.studentName && appState.activeTab && appState.activeTab !== 'panel-1') {
             const tabBtn = document.querySelector(`button[aria-controls="${appState.activeTab}"]`);
-            if (tabBtn) {
-                // We manually trigger click to reuse the UI logic, 
-                // but we bypass the alert since we know we are authorized
-                if (!tabBtn.classList.contains('locked')) {
-                    tabBtn.click();
-                }
+            if (tabBtn && !tabBtn.classList.contains('locked')) {
+                tabBtn.click();
             }
         }
     }
@@ -1046,7 +1066,7 @@
     function resetProgress() {
         if(confirm("Are you sure you want to delete your progress?")) {
             localStorage.removeItem('quizScores');
-            localStorage.removeItem('studentName'); // Clear name
+            localStorage.removeItem('studentName'); // Clear name too
             localStorage.removeItem('activeTab');   // Clear location
             localStorage.removeItem('quizDrafts');  // Clear drafts
             
